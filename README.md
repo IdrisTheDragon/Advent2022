@@ -28,6 +28,7 @@ cargo run -p cargo-day -- XX
 ```
 
 (alternatively)
+
 ```bash
 cargo install --path cargo-day
 cargo-day XX
