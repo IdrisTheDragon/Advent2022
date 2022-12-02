@@ -6,9 +6,9 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-day_01 = { path = "day_01" }
-day_02 = { path = "day_02" }
+day-01 = { path = "day-01" }
+day-02 = { path = "day-02" }
 
 
 [workspace]
-members = ["day_01", "cargo-day", "day_02"]
+members = ["day-01", "cargo-day", "day-02"]

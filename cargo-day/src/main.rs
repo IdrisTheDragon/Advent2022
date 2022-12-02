@@ -1,35 +1,48 @@
-use std::{fs::{self, File}, error::Error, io::Write, process::Command};
+mod cli;
 
-use toml_edit::{Document, value};
+use std::{
+    error::Error,
+    fs::{self, File},
+    io::Write,
+    process::Command,
+};
 
-use std::env;
+use toml_edit::{value, Document};
+
+use clap::{Parser};
+use cli::DayArgs;
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let filename = "Cargo.toml";
-    let content = fs::read_to_string(filename).map_err(|e| format!("Couldn't open {}: {}",filename,e))?;
-    
-    let mut doc = content.parse::<Document>().expect("invalid doc");
+    // parse args
+    let day_args:DayArgs = DayArgs::parse();
 
-    let mut args = env::args();
-    args.next();
-    let day = args.next().ok_or("No day value")?;
+    let day = format!("day_{}", day_args.day_no());
+    let day_path = day.replace('_', "-");
 
-    
-    doc["dependencies"][format!("day_{}",day)]["path"] = value(format!("day_{}",day));
-
-    let mut members = doc["workspace"]["members"].as_array().unwrap().clone();
-    members.push(format!("day_{}",day));
-    members.fmt();
-    doc["workspace"]["members"] = value(members);
- 
-    println!("{}", doc.to_string());
-
-    let mut file = File::create("Cargo.toml")?;
-    file.write_all(doc.to_string().as_bytes())?;
+    // Creat new package from template
+    Command::new("cargo")
+        .args(["install", "cargo-generate"])
+        .output()?;
 
     Command::new("cargo")
-        .args(["new","--lib",&format!("day_{}",day)])
+        .args(["generate", "--path", "day_template", "--name", &day])
         .output()?;
+
+    // Add new package to current package workspace and dependencies.
+    let content =
+        fs::read_to_string(day_args.filename()).map_err(|e| format!("Couldn't open {:?}: {}", day_args.filename(), e))?;
+    let mut doc = content.parse::<Document>().expect("invalid doc");
+    doc["dependencies"][&day]["path"] = value(&day_path);
+    let mut members = doc["workspace"]["members"].as_array().unwrap().clone();
+    members.push(&day_path);
+    members.fmt();
+    doc["workspace"]["members"] = value(members);
+    let mut file = File::create("Cargo.toml")?;
+    file.write_all(doc.to_string().as_bytes())?;
+    
+    // todo add calls to library to src/main.rs
+
+    // todo populate input.txt?
 
     Ok(())
 }

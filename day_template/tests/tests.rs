@@ -1,11 +1,10 @@
-
 mod tests {
-    use day_02::day_02::solve;
+    use {{project-name | snake_case}}::{{project-name | snake_case}}::solve;
 
     #[test]
     fn test_example_01() {
         let x = solve("example.txt");
         assert!(x.is_ok());
-        assert_eq!((15,12),x.unwrap());
+        assert_eq!((0,0),x.unwrap());
     }
 }
