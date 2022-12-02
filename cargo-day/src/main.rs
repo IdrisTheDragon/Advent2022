@@ -25,7 +25,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         .output()?;
 
     Command::new("cargo")
-        .args(["generate", "--path", "day_template", "--name", &day])
+        .args(["generate", "--path",day_args.template(), "--name", &day])
         .output()?;
 
     // Add new package to current package workspace and dependencies.

@@ -22,6 +22,10 @@ pub struct DayArgs {
     /// Cargo file to modify
     #[arg(short, long, default_value_t = {"Cargo.toml".to_string()})]
     filename: String,
+
+    /// template directory to use
+    #[arg(short, long, default_value_t = {"day_template".to_string()})]
+    template: String,
 }
 
 impl DayArgs {
@@ -31,5 +35,9 @@ impl DayArgs {
 
     pub fn filename(&self) -> &String {
         &self.filename
+    }
+
+    pub fn template(&self) -> &String {
+        &self.template
     }
 }
