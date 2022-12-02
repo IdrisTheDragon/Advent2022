@@ -1,14 +1,8 @@
 [package]
-name = "advent2022"
+name = "day_02"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-day_01 = { path = "day_01" }
-day_02 = { path = "day_02" }
-
-
-[workspace]
-members = ["day_01", "cargo-day", "day_02"]
