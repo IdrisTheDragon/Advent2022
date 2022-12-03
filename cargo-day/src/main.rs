@@ -32,7 +32,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let content = fs::read_to_string(day_args.cargoname())
         .map_err(|e| format!("Couldn't open {:?}: {}", day_args.cargoname(), e))?;
     let mut doc = content.parse::<Document>().expect("invalid doc");
-    doc["dependencies"][&day]["path"] = value(&day_path);
+    doc["dependencies"][&day_path]["path"] = value(&day_path);
     let mut members = doc["workspace"]["members"].as_array().unwrap().clone();
     members.push(&day_path);
     members.fmt();
@@ -41,9 +41,12 @@ fn main() -> Result<(), Box<dyn Error>> {
     file.write_all(doc.to_string().as_bytes())?;
 
     // add calls to library to src/main.rs
-    let mut lib_call = "let x = day_{no}::solve(\"day-{no}/input.txt\")?;
-    println!(\"Day {no} Part1: {}\", x.0);
-    println!(\"Day {no} Part2: {}\", x.1);
+    let mut lib_call = "let now = Instant::now();
+    let x = day_{no}::solve(\"day-{no}/input.txt\")?;
+    println!(\"=== Day {no} ===\");
+    println!(\"Part 1: {}\", x.0);
+    println!(\"Part 2: {}\", x.1);
+    println!(\"Elapsed: {:.2?}\", now.elapsed());
     
     //{{next day}}"
         .to_string();
