@@ -26,24 +26,27 @@ pub mod day_04 {
     pub fn solve(filename: &str) -> Result<(i32, i32), Box<dyn Error>> {
         let data = parse(filename)?;
 
-        let prep = data.iter().map(|l| {
-            l.split(&[',','-'])
-                .map(|v| v.parse::<i32>())
-                .collect::<Result<Vec<i32>,ParseIntError>>()
-        }).collect::<Result<Vec<Vec<i32>>, ParseIntError>>()?;
+        let prep = data
+            .iter()
+            .map(|l| {
+                l.split(&[',', '-'])
+                    .map(|v| v.parse::<i32>())
+                    .collect::<Result<Vec<i32>, ParseIntError>>()
+            })
+            .collect::<Result<Vec<Vec<i32>>, ParseIntError>>()?;
 
         //part1
         let p1 = prep
             .iter()
-            .map(|p| (p[0] >= p[2] && p[1] <= p[3]) || (p[0] <= p[2] && p[1] >= p[3]))
-            .fold(0, |acc, v| if v { acc + 1 } else { acc });
+            .filter(|p| (p[0] >= p[2] && p[1] <= p[3]) || (p[0] <= p[2] && p[1] >= p[3]))
+            .count();
 
         // part2
         let p2 = prep
             .iter()
-            .map(|p| p[1] >= p[2] && p[3] >= p[0])
-            .fold(0, |acc, v| if v { acc + 1 } else { acc });
+            .filter(|p| p[1] >= p[2] && p[3] >= p[0])
+            .count();
 
-        Ok((p1, p2))
+        Ok((p1.try_into()?, p2.try_into()?))
     }
 }
