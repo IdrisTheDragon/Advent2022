@@ -1,6 +1,6 @@
 pub mod day_04 {
 
-    use std::{error::Error, fs};
+    use std::{error::Error, fs, num::ParseIntError};
 
     fn parse(filename: &str) -> Result<Vec<String>, Box<dyn Error>> {
         let content = fs::read_to_string(&filename)
@@ -27,25 +27,20 @@ pub mod day_04 {
         let data = parse(filename)?;
 
         let prep = data.iter().map(|l| {
-            l.split(',')
-                .map(|m| {
-                    m.split('-')
-                        .map(|v| v.parse::<i32>().expect("A value"))
-                })
-                .fold(Vec::<i32>::new(),|mut acc, m| {
-                    acc.extend(m);
-                    acc
-                })
-        });
+            l.split(&[',','-'])
+                .map(|v| v.parse::<i32>())
+                .collect::<Result<Vec<i32>,ParseIntError>>()
+        }).collect::<Result<Vec<Vec<i32>>, ParseIntError>>()?;
 
         //part1
         let p1 = prep
-            .clone()
+            .iter()
             .map(|p| (p[0] >= p[2] && p[1] <= p[3]) || (p[0] <= p[2] && p[1] >= p[3]))
             .fold(0, |acc, v| if v { acc + 1 } else { acc });
 
         // part2
         let p2 = prep
+            .iter()
             .map(|p| p[1] >= p[2] && p[3] >= p[0])
             .fold(0, |acc, v| if v { acc + 1 } else { acc });
 
