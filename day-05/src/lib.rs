@@ -46,7 +46,7 @@ pub mod day_05 {
             });
 
         // parse instructions,
-        let mut instructions = data.iter()
+        let instructions = data.iter()
             // skip until after the empty line
             .skip_while(|a| !a.is_empty())
             .skip(1)
