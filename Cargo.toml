@@ -12,7 +12,8 @@ day-03 = { path = "day-03" }
 day-04 = { path = "day-04" }
 day-05 = { path = "day-05" }
 day-06 = { path = "day-06" }
+day-07 = { path = "day-07" }
 
 
 [workspace]
-members = ["day-01", "cargo-day", "day-02", "day-03", "day-04", "day-05", "day-06"]
+members = ["day-01", "cargo-day", "day-02", "day-03", "day-04", "day-05", "day-06", "day-07"]
