@@ -6,13 +6,13 @@ pub mod day_11 {
 
     #[derive(Debug)]
     struct Monkey {
-        items: VecDeque<i64>,
+        items: VecDeque<i128>,
         op: char,
         op_v: Box<str>,
-        test_v: i64,
+        test_v: i128,
         test_true: usize,
         test_false: usize,
-        inspections: i64,
+        inspections: i128,
     }
 
     impl Monkey {
@@ -25,12 +25,12 @@ pub mod day_11 {
                 .expect("start")
                 .split([':', ','])
                 .skip(1)
-                .map(|v| v.trim().parse::<i64>().expect("success"))
-                .collect::<VecDeque<i64>>();
+                .map(|v| v.trim().parse::<i128>().expect("success"))
+                .collect::<VecDeque<i128>>();
             //   Operation: new = old * 19
-            let mut op_line: Vec<&str> = data.next().expect("op").split(' ').collect();
+            let op_line: Vec<&str> = data.next().expect("op").split(' ').collect();
 
-            println!("{:?}", op_line[7]);
+            //println!("{:?}", op_line[7]);
 
             Monkey {
                 items,
@@ -39,15 +39,15 @@ pub mod day_11 {
                 test_v: data
                     .next()
                     .expect("t")
-                    .split(" ")
+                    .split(' ')
                     .nth(5)
                     .expect("t1")
-                    .parse::<i64>()
+                    .parse::<i128>()
                     .expect("t2"),
                 test_true: data
                     .next()
                     .expect("tt")
-                    .split(" ")
+                    .split(' ')
                     .nth(9)
                     .expect("ttt1")
                     .parse::<usize>()
@@ -55,7 +55,7 @@ pub mod day_11 {
                 test_false: data
                     .next()
                     .expect("tf")
-                    .split(" ")
+                    .split(' ')
                     .nth(9)
                     .expect("tf1")
                     .parse::<usize>()
@@ -63,13 +63,13 @@ pub mod day_11 {
                 inspections: 0,
             }
         }
-        fn inspect(&mut self) -> Option<(usize, i64)> {
+        fn inspect(&mut self) -> Option<(usize, i128)> {
             // inspect
             let mut item = self.items.pop_front()?;
             self.inspections += 1;
-            let op_v = match self.op_v.parse::<i64>() {
+            let op_v = match self.op_v.parse::<i128>() {
                 Ok(v) => v,
-                Err(_) => item.clone(),
+                Err(_) => item,
             };
             match self.op {
                 '+' => item += op_v,
@@ -78,6 +78,31 @@ pub mod day_11 {
             }
 
             item /= 3;
+
+            let throw = if item % self.test_v == 0 {
+                self.test_true
+            } else {
+                self.test_false
+            };
+
+            Some((throw, item))
+        }
+
+        fn inspect_p2(&mut self, mod_value: i128) -> Option<(usize, i128)> {
+            // inspect
+            let mut item = self.items.pop_front()?;
+            self.inspections += 1;
+            let op_v = match self.op_v.parse::<i128>() {
+                Ok(v) => v,
+                Err(_) => item,
+            };
+            match self.op {
+                '+' => item += op_v,
+                '*' => item *= op_v,
+                _ => {}
+            }
+
+            item %= mod_value;
 
             let throw = if item % self.test_v == 0 {
                 self.test_true
@@ -106,10 +131,10 @@ pub mod day_11 {
     /// # use day_11::day_11::solve;
     /// let x = solve("example.txt");
     /// assert!(x.is_ok());
-    /// assert_eq!((10605,0),x.unwrap());
+    /// assert_eq!((10605,2713310158),x.unwrap());
     /// ```
     ///
-    pub fn solve(filename: &str) -> Result<(i64, i64), Box<dyn Error>> {
+    pub fn solve(filename: &str) -> Result<(i128, i128), Box<dyn Error>> {
         let mut data = parse(filename)?;
 
         //println!("{:?}\n", data);
@@ -134,14 +159,39 @@ pub mod day_11 {
             .sorted()
             .rev()
             .take(2)
-            .map(|c| {
-                println! {"{}",c};
-                c
-            })
             .product();
 
+        let mut data = parse(filename)?;
+
+        let mod_value: i128 = data.iter().map(|x| x.test_v).product();
+
+        //println!("{:?}\n", data);
+
+        let mut round = 1;
+        while round <= 10000 {
+            let mut mcount = 0;
+            while mcount < data.len() {
+                while let Some((throw, item)) = data[mcount].inspect_p2(mod_value) {
+                    data[throw].items.push_back(item);
+                }
+                mcount += 1;
+            }
+            // println!(
+            //     "{},{:?}\n",
+            //     round,
+            //     data.iter().map(|x| x.inspections).collect::<Vec<i128>>()
+            // );
+            round += 1;
+        }
+
         // part2
-        let p2 = 0;
+        let p2 = data
+            .into_iter()
+            .map(|m| m.inspections)
+            .sorted()
+            .rev()
+            .take(2)
+            .product();
 
         Ok((p1, p2))
     }
