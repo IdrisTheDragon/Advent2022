@@ -42,10 +42,7 @@ pub mod day_04 {
             .count();
 
         // part2
-        let p2 = prep
-            .iter()
-            .filter(|p| p[1] >= p[2] && p[3] >= p[0])
-            .count();
+        let p2 = prep.iter().filter(|p| p[1] >= p[2] && p[3] >= p[0]).count();
 
         Ok((p1.try_into()?, p2.try_into()?))
     }

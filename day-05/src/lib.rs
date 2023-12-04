@@ -26,7 +26,7 @@ pub mod day_05 {
     pub fn solve(filename: &str) -> Result<(String, String), Box<dyn Error>> {
         let data = parse(filename)?;
 
-        let stackcount = (data[0].len() +1) / 4;
+        let stackcount = (data[0].len() + 1) / 4;
         let mut stacks = Vec::new();
         for _ in 0..stackcount {
             stacks.push(Vec::new());
@@ -41,12 +41,12 @@ pub mod day_05 {
                     if c.is_alphabetic() {
                         stack.push(c);
                     }
-                    
                 });
             });
 
         // parse instructions,
-        let instructions = data.iter()
+        let instructions = data
+            .iter()
             // skip until after the empty line
             .skip_while(|a| !a.is_empty())
             .skip(1)
@@ -59,41 +59,42 @@ pub mod day_05 {
                     l1[5].parse::<usize>().unwrap(),
                 )
             });
-        
+
         // save copy for part 2
         let mut p2_stacks = stacks.clone();
 
         //run the instructions p1 way
         instructions.clone().for_each(|(num, from, to)| {
-                let from_stack= stacks.get_mut(from-1).expect("a stack");
+            let from_stack = stacks.get_mut(from - 1).expect("a stack");
 
-                let mut temp = Vec::new();
-                
-                from_stack.drain(0..num).for_each(|a| temp.push(a));
-                
-                
-                let stack = stacks.get_mut(to-1).expect("a stack");
+            let mut temp = Vec::new();
 
-                stack.reverse();
-                stack.extend(temp);
-                stack.reverse();
-            });
+            from_stack.drain(0..num).for_each(|a| temp.push(a));
+
+            let stack = stacks.get_mut(to - 1).expect("a stack");
+
+            stack.reverse();
+            stack.extend(temp);
+            stack.reverse();
+        });
 
         //part1
-        let p1 = stacks.iter().map(|stack| stack.first().expect("a value in the stack")).collect::<String>();
+        let p1 = stacks
+            .iter()
+            .map(|stack| stack.first().expect("a value in the stack"))
+            .collect::<String>();
 
         //run the instructions p2 way
         instructions.for_each(|(num, from, to)| {
-            let from_stack= p2_stacks.get_mut(from-1).expect("a stack");
+            let from_stack = p2_stacks.get_mut(from - 1).expect("a stack");
 
             let mut temp = Vec::new();
-            
+
             from_stack.drain(0..num).for_each(|a| temp.push(a));
 
             temp.reverse();
-            
-            
-            let stack = p2_stacks.get_mut(to-1).expect("a stack");
+
+            let stack = p2_stacks.get_mut(to - 1).expect("a stack");
 
             stack.reverse();
             stack.extend(temp);
@@ -101,7 +102,10 @@ pub mod day_05 {
         });
 
         // part2
-        let p2 = p2_stacks.iter().map(|stack| stack.first().expect("a value in the stack")).collect::<String>();
+        let p2 = p2_stacks
+            .iter()
+            .map(|stack| stack.first().expect("a value in the stack"))
+            .collect::<String>();
 
         Ok((p1, p2))
     }

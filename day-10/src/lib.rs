@@ -24,7 +24,7 @@ pub mod day_10 {
         strengths.push(*x * *cycle);
 
         screen.push(
-            if *x -1 <= (*cycle-1)%40 && (*cycle-1)%40 <= *x + 1 {
+            if *x - 1 <= (*cycle - 1) % 40 && (*cycle - 1) % 40 <= *x + 1 {
                 '#'
             } else {
                 '.'
@@ -36,7 +36,6 @@ pub mod day_10 {
         //     }
         //     println!(" {} {}",cycle,x);
         // }
-        
     }
 
     ///
@@ -80,9 +79,9 @@ pub mod day_10 {
         let mut out = "".to_string();
         for x in 0..6 {
             for y in 0..40 {
-                out+=&screen[x*40 + y].to_string();
+                out += &screen[x * 40 + y].to_string();
             }
-            out+="\n";
+            out += "\n";
         }
 
         // part2

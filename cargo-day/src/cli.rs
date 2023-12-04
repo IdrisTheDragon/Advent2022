@@ -3,15 +3,15 @@ use clap::Parser;
 ///
 /// Usage:
 /// cargo install --path cargo-day
-/// cargo-day 03 
-/// 
+/// cargo-day 03
+///
 /// todo fix when calling as `cargo day`
 /// cargo day 03
 /// error: Found argument '03' which wasn't expected, or isn't valid in this context
-/// 
+///
 /// (it seems to be picking up 'day' as the day_no arg instead of skipping it.)
-/// 
-/// 
+///
+///
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about)]

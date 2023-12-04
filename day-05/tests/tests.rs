@@ -5,6 +5,6 @@ mod tests {
     fn test_example_01() {
         let x = solve("example.txt");
         assert!(x.is_ok());
-        assert_eq!(("CMZ".to_string(),"MCD".to_string()),x.unwrap());
+        assert_eq!(("CMZ".to_string(), "MCD".to_string()), x.unwrap());
     }
 }

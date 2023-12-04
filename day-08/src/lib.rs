@@ -36,13 +36,12 @@ pub mod day_08 {
         // edges
         count += (data.len() - 2) * 2;
         count += data[0].len() * 2;
-        
 
-        for row in 1..data.len()-1 {
-            for col in 1..data[0].len()-1 {
+        for row in 1..data.len() - 1 {
+            for col in 1..data[0].len() - 1 {
                 let r = data.get(row).ok_or("missing r")?;
                 let h = r.get(col).ok_or("missing v")?;
-                
+
                 //p1
                 if
                 //row left
@@ -50,7 +49,7 @@ pub mod day_08 {
                 ||
                 //row right
                 r[col+1..r.len()].iter().max().ok_or("no max")? < h
-                || 
+                ||
                 //col above
                 data[0..row].iter()
                     .map(|v| v[col])
@@ -61,41 +60,53 @@ pub mod day_08 {
                     .map(|v| v[col])
                     .max().ok_or("no max")? < *h
                 {
-                    count+=1;
+                    count += 1;
                 }
 
                 //p2
                 //println!("{:?}", &data[row+1..data.len()]);
                 let mut last = true;
                 let scores = vec![
-                //row left
-                r[0..col].iter()
-                    .rev()
-                    .take_while(|x| {
-                    last = *x < h;
-                    last
-                    }).count() + if last { 0 } else { 1 },
-                //row right
-                r[col+1..r.len()].iter()
-                    .take_while(|x| {
-                        last = *x < h;
-                        last
-                    })
-                    .count() + if last { 0 } else { 1 },
-                //col above
-                data[0..row].iter().map(|v| v[col])
-                    .rev()
-                    .take_while(|x| {
-                        last = x < h;
-                        last
-                    }).count() + if last { 0 } else { 1 },
-                //col below
-                data[row+1..data.len()].iter().map(|v| v[col])
-                    .take_while(|x| {
-                        last = x < h;
-                        last
-                    })
-                    .count()+ if last { 0 } else { 1 },
+                    //row left
+                    r[0..col]
+                        .iter()
+                        .rev()
+                        .take_while(|x| {
+                            last = *x < h;
+                            last
+                        })
+                        .count()
+                        + if last { 0 } else { 1 },
+                    //row right
+                    r[col + 1..r.len()]
+                        .iter()
+                        .take_while(|x| {
+                            last = *x < h;
+                            last
+                        })
+                        .count()
+                        + if last { 0 } else { 1 },
+                    //col above
+                    data[0..row]
+                        .iter()
+                        .map(|v| v[col])
+                        .rev()
+                        .take_while(|x| {
+                            last = x < h;
+                            last
+                        })
+                        .count()
+                        + if last { 0 } else { 1 },
+                    //col below
+                    data[row + 1..data.len()]
+                        .iter()
+                        .map(|v| v[col])
+                        .take_while(|x| {
+                            last = x < h;
+                            last
+                        })
+                        .count()
+                        + if last { 0 } else { 1 },
                 ];
                 //println!("{} {} {:?}",row,col,scores);
                 let score = scores.iter().product();
