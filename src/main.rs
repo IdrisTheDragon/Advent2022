@@ -13,6 +13,7 @@ use day_08::day_08;
 use day_09::day_09;
 use day_10::day_10;
 use day_11::day_11;
+use day_12::day_12;
 //{{next day import}}
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -89,6 +90,13 @@ fn main() -> Result<(), Box<dyn Error>> {
     let now = Instant::now();
     let x = day_11::solve("day-11/input.txt")?;
     println!("=== Day 11 ===");
+    println!("Part 1: {}", x.0);
+    println!("Part 2: {}", x.1);
+    println!("Elapsed: {:.2?}", now.elapsed());
+
+    let now = Instant::now();
+    let x = day_12::solve("day-12/input.txt")?;
+    println!("=== Day 12 ===");
     println!("Part 1: {}", x.0);
     println!("Part 2: {}", x.1);
     println!("Elapsed: {:.2?}", now.elapsed());

@@ -3,12 +3,11 @@ pub mod day_03 {
     use std::{collections::HashSet, error::Error, fs};
 
     fn parse(filename: &str) -> Result<Vec<String>, Box<dyn Error>> {
-        let content = fs::read_to_string(&filename)
+        let content = fs::read_to_string(filename)
             .map_err(|e| format!("Couldn't open {}: {}", filename, e))?;
 
         Ok(content
             .lines()
-            .into_iter()
             .map(|l| l.to_string())
             .collect::<Vec<String>>())
     }
@@ -45,14 +44,14 @@ pub mod day_03 {
                 assert!(sets.len() >= 3);
                 let s = sets[idy]
                     .intersection(&sets[idy - 1])
-                    .map(|c| c.clone())
+                    .copied()
                     .collect::<HashSet<char>>();
                 let t = s
                     .intersection(&sets[idy - 2])
-                    .map(|c| c.clone())
+                    .copied()
                     .collect::<Vec<char>>();
                 assert!(t.len() == 1);
-                badges.push(t[0].clone());
+                badges.push(t[0]);
             }
         }
         //part1
@@ -72,9 +71,9 @@ pub mod day_03 {
             .into_iter()
             .map(|c| {
                 if c.is_ascii_lowercase() {
-                    c.clone() as i32 - 96
+                    c as i32 - 96
                 } else {
-                    c.clone() as i32 - 64 + 26
+                    c as i32 - 64 + 26
                 }
             })
             .sum();
