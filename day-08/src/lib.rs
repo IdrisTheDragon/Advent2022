@@ -3,7 +3,7 @@ pub mod day_08 {
     use std::{error::Error, fs};
 
     fn parse(filename: &str) -> Result<Vec<Vec<u32>>, Box<dyn Error>> {
-        let content = fs::read_to_string(&filename)
+        let content = fs::read_to_string(filename)
             .map_err(|e| format!("Couldn't open {}: {}", filename, e))?;
 
         let x = content

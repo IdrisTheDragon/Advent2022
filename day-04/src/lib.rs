@@ -3,12 +3,11 @@ pub mod day_04 {
     use std::{error::Error, fs, num::ParseIntError};
 
     fn parse(filename: &str) -> Result<Vec<String>, Box<dyn Error>> {
-        let content = fs::read_to_string(&filename)
+        let content = fs::read_to_string(filename)
             .map_err(|e| format!("Couldn't open {}: {}", filename, e))?;
 
         Ok(content
             .lines()
-            .into_iter()
             .map(|l| l.to_string())
             .collect::<Vec<String>>())
     }

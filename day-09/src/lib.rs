@@ -3,7 +3,7 @@ pub mod day_09 {
     use std::{collections::HashSet, error::Error, fs};
 
     fn parse(filename: &str) -> Result<Vec<char>, Box<dyn Error>> {
-        let content = fs::read_to_string(&filename)
+        let content = fs::read_to_string(filename)
             .map_err(|e| format!("Couldn't open {}: {}", filename, e))?;
 
         Ok(content

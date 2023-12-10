@@ -7,12 +7,11 @@ pub mod day_07 {
     };
 
     fn parse(filename: &str) -> Result<Vec<String>, Box<dyn Error>> {
-        let content = fs::read_to_string(&filename)
+        let content = fs::read_to_string(filename)
             .map_err(|e| format!("Couldn't open {}: {}", filename, e))?;
 
         Ok(content
             .lines()
-            .into_iter()
             .map(|l| l.to_string())
             .collect::<Vec<String>>())
     }
@@ -38,7 +37,7 @@ pub mod day_07 {
             if l.starts_with("$ ") {
                 let mut l1 = l.split(' ');
                 match l1.nth(1) {
-                    Some(x) if x == "cd" => match l1.nth(0) {
+                    Some(x) if x == "cd" => match l1.next() {
                         Some(y) if y == ".." => {
                             let mut last = 't';
                             dir = dir
@@ -69,12 +68,12 @@ pub mod day_07 {
                 }
             } else if l.starts_with("dir") {
                 // ignore dirs
-                ()
+                
             } else {
-                let l1 = l.split(" ").collect::<Vec<&str>>();
+                let l1 = l.split(' ').collect::<Vec<&str>>();
                 files.insert(
                     dir.clone() + "/" + l1.get(1).expect("a file name"),
-                    l1.get(0).expect("a value").parse::<u64>().expect("success"),
+                    l1.first().expect("a value").parse::<u64>().expect("success"),
                 );
             }
         });
@@ -87,7 +86,7 @@ pub mod day_07 {
             let dir_size: u64 = files
                 .iter()
                 .filter(|(file, _)| file.starts_with(&dir1))
-                .map(|(_, size)| size.clone())
+                .map(|(_, size)| *size)
                 .sum();
             dir_size
         });
@@ -95,7 +94,7 @@ pub mod day_07 {
         //part1
         let p1 = dir_sizes.clone().filter(|x| x <= &100_000).sum();
 
-        let root_size: u64 = files.iter().map(|(_, size)| size.clone()).sum();
+        let root_size: u64 = files.values().map(|size| *size).sum();
         let unused = 70000000 - root_size;
         let required = 30000000 - unused;
 
